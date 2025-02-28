@@ -6,7 +6,7 @@
 /*   By: licohen <licohen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 18:11:13 by licohen           #+#    #+#             */
-/*   Updated: 2025/02/27 14:36:10 by licohen          ###   ########.fr       */
+/*   Updated: 2025/02/28 19:45:25 by licohen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,27 +30,6 @@ enum	e_states
 	ERROR = -1,
 	FALSE,
 	TRUE,
-};
-
-enum e_error
-{
-    ERR_ARGS = 1,
-    ERR_MALLOC,
-    ERR_THREAD,
-    ERR_MUTEX_INIT,
-    ERR_MUTEX_DESTROY,
-    ERR_JOIN_THREAD,
-    ERR_INVALID_ARGS,
-    ERR_NON_POSITIVE,
-    ERR_NON_INTEGER,
-    ERR_INT_OVERFLOW,
-    ERR_NO_PHILOS,
-    ERR_TIME_TO_DIE,
-    ERR_MEALS_NB,
-    ERR_MUTEX_LOCK,
-    ERR_MUTEX_UNLOCK,
-    ERR_TIME,
-    ERR_USLEEP
 };
 
 typedef struct s_philo
@@ -81,77 +60,76 @@ typedef struct s_dinner
 	long			start_time;
 }	t_dinner;
 
-// check_args.c
-int		check_args(int argc, char **argv);
-int		check_format(char **inputs);
-long	positive_atol(char *str);
+//agrs_utils
 int		check_space(char c);
+long	positive_atol(char *str);
+int		check_format(char **inputs);
+int		check_args(int argc, char **argv);
 
-// display_errors.c
-void	error_exit(char *error);
-void	print_error(char *s);
-void	print_error_mtx(char *s, t_philo *philo);
-
-// get_time.c
-long	get_current_time_ms(void);
-long	get_time_from_start(long start_time);
-long	get_current_time_usec(void);
-
-// handle_dinner_1.c
-int		init_dinner(int argc, char **inputs, t_dinner **dinner);
-int		set_dinner(int argc, char **inputs, t_dinner **dinner);
-int		init_forks(t_dinner *dinner);
-void	delete_dinner(t_dinner *dinner);
+//dinner_innit
 void	destroy_forks(t_dinner *dinner);
+void	delete_dinner(t_dinner *dinner);
+int		init_forks(t_dinner *dinner);
+int		set_dinner(int argc, char **inputs, t_dinner **dinner);
+int		init_dinner(int argc, char **inputs, t_dinner **dinner);
 
-// handle_dinner_2.c
+//dinner_monitor
 int		init_set_end(t_dinner *dinner);
 int		init_print(t_dinner *dinner);
 void	set_dinner_end(t_dinner *dinner);
 int		get_in_progress(t_dinner *dinner);
 void	*monitor_dinner(t_philo *philos, t_dinner *dinner);
 
-// handle_dinner_3.c
+//dinner_status
+int		init_is_full(t_dinner *dinner);
+void	set_is_full(t_philo *philo);
 int		init_meal_time(t_dinner *dinner);
 void	set_meal_time(t_philo *philo);
 long	get_meal_time(t_philo *philo);
-int		init_forks_var(t_dinner *dinner);
-void	free_forks_var(t_dinner *dinner);
 
-// handle_dinner_4.c
-int		init_is_full(t_dinner *dinner);
-void	set_is_full(t_philo *philo);
+//dinner_utils
 int		get_is_full(t_philo *philo, t_dinner *dinner);
 int		init_all_mutex(t_dinner *dinner);
 void	free_all_mutex(t_dinner *dinner);
+int		init_forks_var(t_dinner *dinner);
+void	free_forks_var(t_dinner *dinner);
 
-// handle_philo_1.c
-int		init_philosophers(t_philo **philos, t_dinner *dinner);
-void	*philo_routine(void *arg);
-void	one_philo_routine(t_philo *philo, t_dinner *dinner);
-int		is_philo_dead(t_philo *philo, t_dinner *dinner);
-void	delete_philosophers(t_philo *philos, t_dinner *dinner);
+//error_utils
+void	print_error(char *s);
+void	print_error_mtx(char *s, t_philo *philo);
+void	error_exit(char *error);
 
-// handle_philo_2.c
-void	handle_action(t_philo *philo, char *str);
+//mutex_utils
+void	handle_lock_mutex(pthread_mutex_t *mutex, t_dinner *dinner);
+void	handle_unlock_mutex(pthread_mutex_t *mutex, t_dinner *dinner);
+void	print_died(t_philo *philo, char *str);
+int		check_str(const char *s1, const char *s2, size_t size);
+
+//philo_forks
 void	lock_first_fork(t_dinner *dinner, t_philo *philo);
 void	lock_second_fork(t_dinner *dinner, t_philo *philo);
 void	unlock_first_fork(t_dinner *dinner, t_philo *philo);
-void	safe_usleep(long sleep_time, t_dinner *dinner);
-
-// handle_philo_3.c
 void	unlock_second_fork(t_dinner *dinner, t_philo *philo);
-int		check_str(const char *s1, const char *s2, size_t size);
+
+//philo_init
+int		init_philo_vars(t_philo *philo, t_dinner *dinner, int id);
 int		init_meals(t_philo *philo);
+void	delete_philosophers(t_philo *philos, t_dinner *dinner);
+int		is_philo_dead(t_philo *philo, t_dinner *dinner);
+int		init_philosophers(t_philo **philos, t_dinner *dinner);
+
+//philo_routine
 void	increase_meals_nb(t_philo *philo);
 int		get_meals_nb(t_philo *philo);
+void	handle_action(t_philo *philo, char *str);
+void	one_philo_routine(t_philo *philo, t_dinner *dinner);
+void	*philo_routine(void *arg);
 
-// handle_philo_4.c
-void	print_died(t_philo *philo, char *str);
-void	handle_lock_mutex(pthread_mutex_t *mutex, t_dinner *dinner);
-void	handle_unlock_mutex(pthread_mutex_t *mutex, t_dinner *dinner);
+//time_utils
+long	get_current_time_ms(void);
+long	get_time_from_start(long start_time);
+long	get_current_time_usec(void);
+void	safe_usleep(long sleep_time, t_dinner *dinner);
 void	safe_quick_usleep(long sleep_time, t_dinner *dinner);
-int		init_philo_vars(t_philo *philo, t_dinner *dinner, int id);
-
 
 #endif

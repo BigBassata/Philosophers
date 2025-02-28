@@ -6,7 +6,7 @@
 /*   By: licohen <licohen@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/25 18:12:12 by licohen           #+#    #+#             */
-/*   Updated: 2025/02/27 19:13:10 by licohen          ###   ########.fr       */
+/*   Updated: 2025/02/28 19:45:43 by licohen          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,6 @@ int	init_philo_vars(t_philo *philo, t_dinner *dinner, int id)
 	philo->dinner = dinner;
 	return (TRUE);
 }
-
 
 int	init_meals(t_philo *philo)
 {
